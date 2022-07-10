@@ -1,9 +1,9 @@
 name: Build and push a docker image
 
 on:
-- push
-- pull_request
-- workflow_call:
+  push:
+  pull_request:
+  workflow_call:
     inputs:
       app_name:
         description: 'Application name to be used for building the image'
