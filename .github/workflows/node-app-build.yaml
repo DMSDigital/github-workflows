@@ -1,0 +1,17 @@
+name: Node App build and run tests
+
+jobs:
+  build_and_test:
+    name: Build and test NodeJS app
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies and run tests
+      uses: node:17.8-alpine
+      run: |
+        yarn install
+        yarn run test
+        
