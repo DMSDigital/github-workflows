@@ -1,6 +1,6 @@
 name: Node App build and run tests
 
-on: [push, pull_requests]
+on: [push, pull_request]
 
 jobs:
   build_and_test:
