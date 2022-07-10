@@ -1,6 +1,19 @@
 name: Build and push a docker image
 
-on: [push, pull_request, workflow_call]
+on:
+- push
+- pull_request
+- workflow_call:
+    inputs:
+      app_name:
+        description: 'Application name to be used for building the image'
+        required: true
+        type: string
+      registry:
+        description: "Docker registry to push the image"
+        required: false
+        default: eu.gcr.io/dextcloud-2038082
+        type: string
 
 jobs:
   build_and_push:
@@ -16,9 +29,5 @@ jobs:
 
     - name: Build image
       run: |
-        registry=eu.gcr.io/dextcloud-203808
-        if [ $INPUT_REGISTRY]; then
-          registry=$INPUT_REGISTRY;
-        fi
-        docker build -t $registry/$INPUT_APP_NAME:$GITHUB_SHA .
+        docker build -t $INPUT_REGISTRY/$INPUT_APP_NAME:$GITHUB_SHA .
         
