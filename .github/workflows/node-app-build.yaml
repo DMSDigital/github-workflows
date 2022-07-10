@@ -9,10 +9,14 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 17.8
+        cache: 'yarn'
+
     - name: Install dependencies and run tests
-      uses: node:17.8-alpine
-      shell: bash
-      args: |
+      run: |
         yarn install
         yarn run test
         
