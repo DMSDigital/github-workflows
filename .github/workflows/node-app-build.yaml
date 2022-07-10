@@ -1,5 +1,7 @@
 name: Node App build and run tests
 
+on: [push, pull_requests]
+
 jobs:
   build_and_test:
     name: Build and test NodeJS app
