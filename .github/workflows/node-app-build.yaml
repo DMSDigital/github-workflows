@@ -11,7 +11,8 @@ jobs:
 
     - name: Install dependencies and run tests
       uses: node:17.8-alpine
-      run: |
+      shell: bash
+      args: |
         yarn install
         yarn run test
         
