@@ -29,5 +29,5 @@ jobs:
 
     - name: Build image
       run: |
-        docker build -t $INPUT_REGISTRY/$INPUT_APP_NAME:$GITHUB_SHA .
+        docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA .
         
