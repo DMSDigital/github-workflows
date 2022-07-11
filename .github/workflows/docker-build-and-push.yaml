@@ -1,8 +1,6 @@
 name: Build and push a docker image
 
 on:
-  push:
-  pull_request:
   workflow_call:
     inputs:
       app_name:
