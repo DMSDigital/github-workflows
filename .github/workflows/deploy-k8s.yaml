@@ -38,7 +38,6 @@ on:
         description: "Time to wait for the pod rollout to finish"
         required: false
         default: 300
-        type: integer
 
 jobs:
   setup-build-publish-deploy:
