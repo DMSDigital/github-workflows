@@ -36,7 +36,7 @@ on:
         type: string
       rollout_timeout:
         description: "Time to wait for the pod rollout to finish"
-        requred: false
+        required: false
         default: 300
         type: integer
 
