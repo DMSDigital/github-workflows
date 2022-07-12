@@ -11,15 +11,24 @@ on:
         required: true
         type: string
       service_account:
-        description: ''
-        default: ''
-        required: false
+        description: 'GCP Service account to use with Workload identity federation'
+        required: true
         type: string
       workload_identity_provider:
         description: "GCP Workload identity provider for Github actions"
-        required: false
-        default: ''
+        required: true
         type: string
+      cluster:
+        description: "Kubernetes cluster to deploy on"
+        type: string
+      project_id:
+        description: "GCP project ID"
+        type: string
+      location:
+        description: "Kubernetes cluster to deploy on"
+        type: string
+        required: false
+        default: "europe-west2-a"
       registry:
         description: "Docker registry to push the image"
         required: false
@@ -30,6 +39,7 @@ on:
         requred: false
         default: 300
         type: integer
+
 jobs:
   setup-build-publish-deploy:
     name: Deploy to k8s
@@ -54,15 +64,11 @@ jobs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    # Configure Docker to use the gcloud command-line tool as a credential
-    # helper for authentication
-    - run: |-
-        gcloud --quiet auth configure-docker
     # Get the GKE credentials so we can deploy to the cluster
     - uses: google-github-actions/get-gke-credentials@v0.5.0
       with:
-         cluster_name: ${{ inputs.cluster }}
-         location: ${{ inputs.zone }}
+        cluster_name: ${{ inputs.cluster }}
+        location: ${{ inputs.location }}
 
     - name: Deploy
       run: |

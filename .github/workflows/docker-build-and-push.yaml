@@ -12,7 +12,14 @@ on:
         required: false
         default: eu.gcr.io/dextcloud-2038082
         type: string
-
+      service_account:
+        description: 'GCP Service account to use with Workload identity federation'
+        required: true
+        type: string
+      workload_identity_provider:
+        description: "GCP Workload identity provider for Github actions"
+        required: true
+        type: string
 jobs:
   build_and_push:
     name: Build and push a docker image
@@ -28,4 +35,18 @@ jobs:
     - name: Build image
       run: |
         docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA .
-        
+
+    - name: GCP authenticate
+      uses: 'google-github-actions/auth@v0.4.1'
+      with:
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - name: Configure docker
+      run: |-
+        gcloud --quiet auth configure-docker
+
+    - name: Push image
+      run: docker push ${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA
