@@ -21,6 +21,10 @@ on:
         required: true
         type: string
 jobs:
+  permissions:
+    id-token: write
+    contents: write
+
   build_and_push:
     name: Build and push a docker image
     runs-on: ubuntu-latest 
