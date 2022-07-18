@@ -16,6 +16,9 @@ on:
         description: 'GCP Service account to use with Workload identity federation'
         required: true
         type: string
+      project_id:
+        description: "GCP project ID"
+        type: string
       workload_identity_provider:
         description: "GCP Workload identity provider for Github actions"
         required: true
@@ -44,6 +47,10 @@ jobs:
       with:
         workload_identity_provider: ${{ inputs.workload_identity_provider }}
         service_account: ${{ inputs.service_account }}
+    - name: Setup GCLOUD
+      uses: google-github-actions/setup-gcloud@v0.3.0
+      with:
+        project_id: ${{ inputs.project_id }}
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
