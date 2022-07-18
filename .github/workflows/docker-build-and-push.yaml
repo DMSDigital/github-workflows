@@ -10,7 +10,7 @@ on:
       registry:
         description: "Docker registry to push the image"
         required: false
-        default: eu.gcr.io/dextcloud-2038082
+        default: eu.gcr.io/dextcloud-203808
         type: string
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
