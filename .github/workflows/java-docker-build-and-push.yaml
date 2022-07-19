@@ -78,12 +78,4 @@ jobs:
         mvn clean install
         grep -Eo "<version>[0-9]+.[0-9]+.[0-9]+" pom.xml | grep -Eo "[0-9]+\\.[0-9]+\\.[0-9]+" | head -n 1 > next_version
         docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
-
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ${{ inputs.dockerfile }}
-        push: true
-        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}}
-        build-args: |
-          JAR_FILE=target/${{ inputs.java_target_name }}
+        docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} 
