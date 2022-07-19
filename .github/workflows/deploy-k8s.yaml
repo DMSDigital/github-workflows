@@ -10,6 +10,9 @@ on:
         description: 'Application name used for the k8s deployment'
         required: true
         type: string
+      namespace:
+        description: "Kubernetes namespace for the app deployment"
+        type: string
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
         required: true
@@ -73,4 +76,14 @@ jobs:
     - name: Deploy
       run: |
         kubectl set image deployment/${{ inputs.deployment_name }} ${{ inputs.deployment_name }}=${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA
-        timeout ${{ inputs.rollout_timeout }}
+
+    - name: Watch rollout
+      id: rollout
+      run: |
+        timeout ${{ inputs.rollout_timeout }} kubectl rollout status deploy/${{ inputs.deployment_name }} -n ${{ inputs.namespace }}
+
+    - name: Rollback
+      if: ${{ failure() && steps.rollout.conclusion == 'failure' }}
+      run: |
+        kubectl -n ${{ inputs.namespace }} rollout undo deployment ${{ inputs.deployment_name }}
+
