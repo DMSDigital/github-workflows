@@ -20,7 +20,7 @@ on:
       build-args: 
         description: "List of build time arguments to pass to docker build"
         required: false
-        type: list
+        type: string
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
         required: true
