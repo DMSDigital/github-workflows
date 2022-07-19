@@ -12,6 +12,7 @@ on:
         type: string
       namespace:
         description: "Kubernetes namespace for the app deployment"
+        default: default
         type: string
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
