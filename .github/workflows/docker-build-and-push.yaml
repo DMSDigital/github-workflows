@@ -69,5 +69,5 @@ jobs:
         context: .
         file: ${{ inputs.dockerfile }}
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ env.github_sha }}
+        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ env.GITHUB_SHA }}
         build-args: ${{ inputs.build-args }}
