@@ -42,7 +42,7 @@ jobs:
 
     steps:
     - name: Setup
-      uses: ./.github/workflows/init-setup.yaml
+      uses: ./.github/actions/init-setup.yaml
       with:
         project_id: ${{ inputs.project_id }}
         workload_identity_provider: ${{ inputs.workload_identity_provider }}
