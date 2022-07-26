@@ -46,7 +46,7 @@ jobs:
 
     steps:
     - name: Setup
-      uses: ./.github/actions/init-setup@master
+      uses: DMSDigital/github-workflows/.github/actions/init-setup@master
       with:
         project_id: ${{ inputs.project_id }}
         workload_identity_provider: ${{ inputs.workload_identity_provider }}
