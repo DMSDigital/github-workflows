@@ -36,5 +36,6 @@ runs:
   # Configure Docker to use the gcloud command-line tool as a credential
   # helper for authentication
   - name: Configure docker
+    shell: bash
     run: |-
       gcloud --quiet auth configure-docker
