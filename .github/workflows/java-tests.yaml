@@ -28,10 +28,12 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
+    - name: Export spring profile
+      if: ${{ inputs.config_from_vault }} == true
+      run: |
+        export SPRING_APPLICATION_JSON=$(curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: {{ secrets.vault_token }}" -X GET "${secrets.vault_url}" | jq .data
+        echo "::set-env name=SPRING_APPLICATION_JSON::$SPRING_APPLICATION_JSON"
     - name: Run the tests
       run: |
-        if [ ${{ inputs.config_from_vault}} == "true" ]; then
-          export SPRING_APPLICATION_JSON=$(curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: {{ secrets.vault_token }}" -X GET "${secrets.vault_url}" | jq .data)
-        fi
         mvn test
         
