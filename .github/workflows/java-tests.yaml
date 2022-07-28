@@ -1,6 +1,17 @@
 name: Java App build and run tests
 
-on: [workflow_call]
+on: 
+  workflow_call:
+    inputs:
+      config_from_vault:
+        type: boolean
+        required: false
+        description: "Fetch config from Vault and expose it as SPRING_APPLICATION_JSON variable"
+    secrets:
+      vault_url:
+        required: false
+      vault_token:
+        required: false
 
 jobs:
   build_and_test:
@@ -18,5 +29,9 @@ jobs:
         distribution: 'adopt'
 
     - name: Run the tests
-      run: mvn test
+      run: |
+        if [ ${{ inputs.config_from_vault}} == "true" ]; then
+          export SPRING_APPLICATION_JSON=$(curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: {{ secrets.vault_token }}" -X GET "${secrets.vault_url}" | jq .data)
+        fi
+        mvn test
         
