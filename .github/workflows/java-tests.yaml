@@ -32,7 +32,9 @@ jobs:
       if: ${{ inputs.config_from_vault }} == true
       id: spring_profile
       run: |
-        export SPRING_APPLICATION_JSON=$(curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: {{ secrets.vault_token }}" -X GET "${secrets.vault_url}" | jq .data)
+        echo "::echo::on"
+        curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: {{ secrets.vault_token }}" -X GET "${secrets.vault_url}" | jq .data > config
+        cat config
         echo "::set-output name=SPRING_APPLICATION_JSON::$SPRING_APPLICATION_JSON"
     - name: Run the tests
       run: |
