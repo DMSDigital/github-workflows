@@ -27,6 +27,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+        cache: 'maven'
 
     - name: Export spring profile
       if: ${{ inputs.config_from_vault }} == true
@@ -38,6 +39,6 @@ jobs:
         echo "::set-output name=SPRING_APPLICATION_JSON::$SPRING_APPLICATION_JSON"
     - name: Run the tests
       run: |
-        echo ${{ steps.spring_profile.outputs.SPRING_APPLICATION_JSON}}
+        export SPRING_APPLICATION_JSON=${{ steps.spring_profile.outputs.SPRING_APPLICATION_JSON}}
         mvn test
         
