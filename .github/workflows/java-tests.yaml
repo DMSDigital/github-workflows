@@ -16,7 +16,7 @@ on:
 jobs:
   build_and_test:
     name: Test Java app
-    runs-on: [self-hosted, ubuntu-latest]
+    runs-on: [self-hosted]
 
     steps:
     - name: Check out code
