@@ -39,7 +39,7 @@ runs:
       workload_identity_provider: ${{ inputs.workload_identity_provider }}
       service_account: ${{ inputs.service_account }}
   - name: Setup GCLOUD
-    uses: google-github-actions/setup-gcloud@v0.3.0
+    uses: google-github-actions/setup-gcloud@v0.6.0
     with:
       project_id: ${{ inputs.project_id }}
 
