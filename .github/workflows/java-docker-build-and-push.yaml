@@ -39,7 +39,7 @@ on:
 jobs:
   build_and_push:
     name: Build and push a docker image
-    runs-on: ubuntu-latest 
+    runs-on: [self-hosted]
     permissions:
       id-token: write
       contents: write
@@ -57,6 +57,21 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+
+    - name: Setup Maven
+      uses: s4u/setup-maven-action@v1.4.0
+      with:
+        java-version: 11
+        maven-version: 3.6.3
+
+    - name: Export spring profile
+      if: ${{ inputs.config_from_vault }} == true
+      id: spring_profile
+      run: |
+        echo "::echo::on"
+        echo 'SPRING_APPLICATION_JSON<<EOF' >> $GITHUB_ENV
+        curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: ${{ secrets.vault_token }}" -X GET ${{ secrets.vault_url }} | jq .data >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
 
     - name: Build app, build and push image
       run: |
