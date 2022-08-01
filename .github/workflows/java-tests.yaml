@@ -46,6 +46,6 @@ jobs:
 
     - name: Run the tests
       run: |
-        echo ${{ env.SPRING_APPLICATION_JSON }}
+        echo "${SPRING_APPLICATION_JSON}"
         SPRING_APPLICATION_JSON=${{ env. SPRING_APPLICATION_JSON }} mvn -B clean test
         
