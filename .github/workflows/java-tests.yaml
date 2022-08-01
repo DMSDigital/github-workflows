@@ -45,6 +45,7 @@ jobs:
         echo "::set-output name=SPRING_APPLICATION_JSON::$SPRING_APPLICATION_JSON"
     - name: Run the tests
       run: |
+        echo "::echo::on" 
         export SPRING_APPLICATION_JSON=${{ steps.spring_profile.outputs.SPRING_APPLICATION_JSON}}
         echo $SPRING_APPLICATION_JSON
         mvn -B clean test
