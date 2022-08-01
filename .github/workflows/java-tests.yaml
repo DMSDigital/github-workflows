@@ -40,13 +40,11 @@ jobs:
       id: spring_profile
       run: |
         echo "::echo::on"
-        curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: ${{ secrets.vault_token }}" -X GET ${{ secrets.vault_url }} | jq .data > config
-        export SPRING_APPLICATION_JSON=`cat config`
+        export SPRING_APPLICATION_JSON=`curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: ${{ secrets.vault_token }}" -X GET ${{ secrets.vault_url }} | jq .data`
         echo "::set-output name=SPRING_APPLICATION_JSON::$SPRING_APPLICATION_JSON"
     - name: Run the tests
       run: |
-        echo "::echo::on" 
         export SPRING_APPLICATION_JSON=${{ steps.spring_profile.outputs.SPRING_APPLICATION_JSON}}
-        echo $SPRING_APPLICATION_JSON
+        echo "$SPRING_APPLICATION_JSON"
         mvn -B clean test
         
