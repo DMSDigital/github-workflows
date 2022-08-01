@@ -28,9 +28,12 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: 'maven'
-    - name: Setup mavne
-      run: |
-        apt install maven
+
+    - name: Setup Maven
+      uses: s4u/setup-maven-action@1.4.0
+      with:
+        java-version: 11
+        maven-version: 3.6.3
 
     - name: Export spring profile
       if: ${{ inputs.config_from_vault }} == true
