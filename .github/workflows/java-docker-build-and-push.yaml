@@ -65,19 +65,10 @@ jobs:
         java-version: 11
         maven-version: 3.6.3
 
-    - name: Export spring profile
-      if: ${{ inputs.config_from_vault }} == true
-      id: spring_profile
-      run: |
-        echo "::echo::on"
-        echo 'SPRING_APPLICATION_JSON<<EOF' >> $GITHUB_ENV
-        curl --max-time 10  --connect-timeout 10 -Ss -H "X-Vault-Token: ${{ secrets.vault_token }}" -X GET ${{ secrets.vault_url }} | jq .data >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
-
     - name: Build app, build and push image
       run: |
         mvn validate -DbumpPatch
-        mvn clean install
+        mvn -DskipTests clean install
         grep -Eo "<version>[0-9]+.[0-9]+.[0-9]+" pom.xml | grep -Eo "[0-9]+\\.[0-9]+\\.[0-9]+" | head -n 1 > next_version
         docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
         docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} 
