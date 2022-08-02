@@ -45,6 +45,8 @@ jobs:
         echo 'EOF' >> $GITHUB_ENV
 
     - name: Run the tests
+      env:
+        VAULT_TOKEN: ${{ secrets.vault_token }}
       run: |
         echo "${SPRING_APPLICATION_JSON}"
         mvn -B clean test
