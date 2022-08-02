@@ -7,6 +7,11 @@ on:
         type: boolean
         required: false
         description: "Fetch config from Vault and expose it as SPRING_APPLICATION_JSON variable"
+      auth_server:
+        type: string
+        required: false
+        default: http://java-auth.dext-core:9070
+        description: "HTTP URL for dext authentication service"
     secrets:
       vault_url:
         required: false
@@ -47,6 +52,7 @@ jobs:
     - name: Run the tests
       env:
         VAULT_TOKEN: ${{ secrets.vault_token }}
+        APP_AUTH_SERVER_URL: ${{ inputs.auth_server }}
       run: |
         echo "${SPRING_APPLICATION_JSON}"
         mvn -B clean test
