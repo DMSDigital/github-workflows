@@ -53,6 +53,7 @@ jobs:
       env:
         VAULT_TOKEN: ${{ secrets.vault_token }}
         APP_AUTH_SERVER_URL: ${{ inputs.auth_server }}
+        TESTCONTAINERS_RYUK_DISABLED: "true"
       run: |
         echo "${SPRING_APPLICATION_JSON}"
         mvn -B clean test
