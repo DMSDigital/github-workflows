@@ -1,0 +1,56 @@
+name: Build and push a docker image
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'Application name to be used for building the image'
+        required: true
+        type: string
+      registry:
+        description: "Docker registry to pull the image"
+        required: false
+        default: eu.gcr.io/dextcloud-203808
+        type: string
+      dockerhub_registry:
+        description: "DockerHub registry to push the image"
+        required: false
+        default: docker.io/dextcloudonprem/
+        type: string
+      service_account:
+        description: 'GCP Service account to use with Workload identity federation'
+        required: true
+        type: string
+      project_id:
+        description: "GCP project ID"
+        type: string
+      workload_identity_provider:
+        description: "GCP Workload identity provider for Github actions"
+        required: true
+        type: string
+
+    secrets:
+      slack_webhook:
+        required: false
+
+jobs:
+  build_and_push:
+    name: Build and push a docker image
+    runs-on: ubuntu-latest 
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - name: Setup
+      uses: DMSDigital/github-workflows/.github/actions/init-setup@master
+      with:
+        project_id: ${{ inputs.project_id }}
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}
+
+    - name: Pull, tag and push
+      run: |
+        docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}}
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} ${{ inputs.dockerhub_registry}}/${{ inputs.app_name}}:latest
+        docker push ${{ inputs.dockerhub_registry}}/${{ inputs.app_name}}:latest
