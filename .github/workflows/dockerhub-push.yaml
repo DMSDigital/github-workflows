@@ -15,7 +15,7 @@ on:
       dockerhub_registry:
         description: "DockerHub registry to push the image"
         required: false
-        default: docker.io/dextcloudonprem/
+        default: docker.io/dextcloudonprem
         type: string
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
