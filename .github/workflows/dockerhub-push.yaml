@@ -55,6 +55,6 @@ jobs:
       run: |
         docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}}
         docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} ${{ inputs.dockerhub_registry}}/${{ inputs.app_name}}:latest
-        docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
+        echo "${{ secrets.dockerhub_password }}" | docker login -u "${{ secrets.dockerhub_username }}" --password-stdin
         docker login ${{ secrets}}
         docker push ${{ inputs.dockerhub_registry}}/${{ inputs.app_name}}:latest
