@@ -79,7 +79,7 @@ jobs:
 
     - name: Deploy
       run: |
-        kubectl set image deployment/${{ inputs.deployment_name }} ${{ inputs.deployment_name }}=${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA
+        kubectl -n ${{ inputs.namespace }} set image deployment/${{ inputs.deployment_name }} ${{ inputs.deployment_name }}=${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA
 
     - name: Watch rollout
       id: rollout
