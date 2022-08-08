@@ -16,4 +16,4 @@ runs:
     if: ${{ always() }}
     continue-on-error: true
     run: |
-      curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${{ inputs.text }}" ${{ secrets.slack_webhook }}
+      curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${{ inputs.text }}\" ${{ secrets.slack_webhook }}
