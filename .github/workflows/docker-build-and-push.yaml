@@ -62,8 +62,7 @@ jobs:
         build-args: ${{ inputs.build-args }}
 
     - name: Send slack update failure
-      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
       if: ${{ failure() }}
-      with:
-        slack_webhook: ${{ secrets.slack_webhook }}
-        text: "Docker build for ${{ inputs.app_name }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""
+      continue-on-error: true
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Docker build for ${{ inputs.app_name }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\"}" ${{ secrets.slack_webhook }}

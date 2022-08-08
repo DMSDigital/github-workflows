@@ -61,8 +61,7 @@ jobs:
         mvn -B clean test
 
     - name: Send slack update failure
-      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
       if: ${{ failure() }}
-      with:
-        slack_webhook: ${{ secrets.slack_webhook }}
-        text: "Tests for ${{ inputs.app_name }} have failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""
+      continue-on-error: true
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Tests for ${{ inputs.app_name }} have failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.run_id }}\"}" ${{ secrets.slack_webhook }}
