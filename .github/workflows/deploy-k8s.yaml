@@ -98,7 +98,7 @@ jobs:
         curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has finished successfully. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\"}" ${{ secrets.slack_webhook }}
 
     - name: Send slack update failure
-      if: ${{ failed() }}
+      if: ${{ failure() }}
       continue-on-error: true
       run: |
         curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\"}" ${{ secrets.slack_webhook }}
