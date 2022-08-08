@@ -36,6 +36,10 @@ on:
         description: "GCP Workload identity provider for Github actions"
         required: true
         type: string
+    secrets:
+      slack_webhook:
+        required: false
+
 jobs:
   build_and_push:
     name: Build and push a docker image
@@ -72,3 +76,10 @@ jobs:
         grep -Eo "<version>[0-9]+.[0-9]+.[0-9]+" pom.xml | grep -Eo "[0-9]+\\.[0-9]+\\.[0-9]+" | head -n 1 > next_version
         docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
         docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} 
+
+    - name: Send slack update failure
+      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
+      if: ${{ failure() }}
+      with:
+        slack_webhook: ${{ secrets.slack_webhook }}
+        text: "Docker build for ${{ inputs.app_name }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""

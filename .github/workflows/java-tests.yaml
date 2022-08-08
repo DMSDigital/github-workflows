@@ -17,6 +17,8 @@ on:
         required: false
       vault_token:
         required: false
+      slack_webhook:
+        required: false
 
 jobs:
   build_and_test:
@@ -57,4 +59,10 @@ jobs:
       run: |
         echo "${SPRING_APPLICATION_JSON}"
         mvn -B clean test
-        
+
+    - name: Send slack update failure
+      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
+      if: ${{ failure() }}
+      with:
+        slack_webhook: ${{ secrets.slack_webhook }}
+        text: "Tests for ${{ inputs.app_name }} have failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""

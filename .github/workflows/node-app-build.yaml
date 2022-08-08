@@ -1,6 +1,11 @@
 name: Node App build and run tests
 
-on: [workflow_call]
+on:
+  workflow_call:
+    secrets:
+      slack_webhook:
+        required: false
+
 
 jobs:
   build_and_test:
@@ -21,4 +26,10 @@ jobs:
       run: |
         yarn install
         yarn run test
-        
+
+    - name: Send slack update failure
+      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
+      if: ${{ failure() }}
+      with:
+        slack_webhook: ${{ secrets.slack_webhook }}
+        text: "Docker build for ${{ inputs.app_name }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""

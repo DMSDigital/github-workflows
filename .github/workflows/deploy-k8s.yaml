@@ -43,6 +43,9 @@ on:
         required: false
         default: 300
         type: string
+    secrets:
+      slack_webhook:
+        required: false
 
 jobs:
   setup-build-publish-deploy:
@@ -87,4 +90,17 @@ jobs:
       if: ${{ failure() && steps.rollout.conclusion == 'failure' }}
       run: |
         kubectl -n ${{ inputs.namespace }} rollout undo deployment ${{ inputs.deployment_name }}
+    
+    - name: Send slack update success
+      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
+      if: ${{ success() }}
+      with:
+        slack_webhook: ${{ secrets.slack_webhook }}
+        text: "Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has finished successfully. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""
 
+    - name: Send slack update failure
+      uses: DMSDigital/github-workflows/.github/actions/send-slack-message@master
+      if: ${{ failure() }}
+      with:
+        slack_webhook: ${{ secrets.slack_webhook }}
+        text: "Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\""
