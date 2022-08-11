@@ -7,6 +7,11 @@ on:
         description: 'Application name to be used for building the image'
         required: true
         type: string
+      source_tag:
+        description: 'Source tag to pull'
+        required: false
+        type: string
+        default: ${{ github.sha }}
       destination_app_name:
         description: 'Application name override for the destination'
         required: false
@@ -62,12 +67,12 @@ jobs:
 
     - name: Pull, tag and push
       run: |
-        docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}}
+        docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.source_tag	}}
         if [ ${{ inputs.destination_app_name }} ]; then
           app_name=${{ inputs.destination_app_name }}
         else
           app_name=${{ inputs.app_name}}
         fi
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.source_tag }} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
         docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
         docker push ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
