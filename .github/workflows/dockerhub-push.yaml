@@ -14,9 +14,8 @@ on:
         default: ${{ github.sha }}
       destination_app_name:
         description: 'Application name override for the destination'
-        required: false
+        required: true
         type: string
-        default: ${{ inputs.app_name }}
       destination_tag:
         description: 'Destination tag'
         required: false
