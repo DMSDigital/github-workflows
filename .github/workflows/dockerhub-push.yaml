@@ -67,12 +67,17 @@ jobs:
 
     - name: Pull, tag and push
       run: |
-        docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.source_tag	}}
         if [ ${{ inputs.destination_app_name }} ]; then
           app_name=${{ inputs.destination_app_name }}
         else
           app_name=${{ inputs.app_name}}
         fi
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.source_tag }} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
+        if [ ${{ inputs.source_tag }} == "latest" ]; then
+          source_tag=latest
+        else
+          source_tag=${{ github.sha }}
+        fi
+        docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:$.source_tag
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:$source_tag ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
         docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
         docker push ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
