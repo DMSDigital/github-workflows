@@ -39,7 +39,7 @@ on:
 jobs:
   build_and_push:
     name: Build and push a docker image
-    runs-on: ubuntu-latest 
+    runs-on: [self-hosted]
     permissions:
       id-token: write
       contents: write
