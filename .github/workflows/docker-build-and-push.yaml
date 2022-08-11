@@ -39,7 +39,7 @@ on:
 jobs:
   build_and_push:
     name: Build and push a docker image
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest 
     permissions:
       id-token: write
       contents: write
@@ -58,7 +58,7 @@ jobs:
         context: .
         file: ${{ inputs.dockerfile }}
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	 }},latest
+        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	 }},${{ inputs.registry }}/${{ inputs.app_name}}:latest
         build-args: ${{ inputs.build-args }}
 
     - name: Send slack update failure
