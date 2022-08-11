@@ -11,6 +11,11 @@ on:
         description: 'Application name override for the destination'
         required: false
         type: string
+      destination_tag:
+        description: 'Destination tag'
+        required: false
+        type: string
+        default: latest
       registry:
         description: "Docker registry to pull the image"
         required: false
@@ -63,6 +68,6 @@ jobs:
         else
           app_name=${{ inputs.app_name}}
         fi
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} ${{ inputs.dockerhub_registry}}/$app_name:latest
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
         docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
-        docker push ${{ inputs.dockerhub_registry}}/$app_name:latest
+        docker push ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
