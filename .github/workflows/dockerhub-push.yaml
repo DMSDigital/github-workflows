@@ -73,6 +73,6 @@ jobs:
           source_tag=${{ github.sha }}
         fi
         docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:$source_tag
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:$source_tag ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:$source_tag ${{ inputs.dockerhub_registry}}/${{ inputs.destination_app_name}}:${{ inputs.destination_tag }}
         docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
         docker push ${{ inputs.dockerhub_registry}}/${{ inputs.destination_app_name }}:${{ inputs.destination_tag }}
