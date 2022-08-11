@@ -63,11 +63,11 @@ jobs:
     - name: Pull, tag and push
       run: |
         docker pull ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}}
-        if [ ${{ inputs.destination_app_name }}]; then
+        if [ ${{ inputs.destination_app_name }} ]; then
           app_name=${{ inputs.destination_app_name }}
         else
           app_name=${{ inputs.app_name}}
         fi
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}
         docker login -u "${{ secrets.dockerhub_username }}" -p "${{ secrets.dockerhub_password }}"
         docker push ${{ inputs.dockerhub_registry}}/$app_name:${{ inputs.destination_tag }}

@@ -25,6 +25,10 @@ on:
         description: "List of build time arguments to pass to docker build"
         required: false
         type: string
+      tag_latest:
+        description: "Tag the push to the registry with the latest tag"
+        type: boolean
+        default: true
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
         required: true
