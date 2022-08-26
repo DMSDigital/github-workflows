@@ -73,9 +73,12 @@ jobs:
         java-version: 11
         maven-version: 3.6.3
 
+    - name: Bump version on master
+      if: github.ref == 'refs/heads/master'
+      run: mvn validate -DbumpPatch
+
     - name: Build app, build and push image
       run: |
-        mvn validate -DbumpPatch
         mvn -DskipTests clean install
         grep -Eo "<version>[0-9]+.[0-9]+.[0-9]+" pom.xml | grep -Eo "[0-9]+\\.[0-9]+\\.[0-9]+" | head -n 1 > next_version
         docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
@@ -84,6 +87,7 @@ jobs:
           docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:latest
           docker push ${{ inputs.registry }}/${{ inputs.app_name}}:latest
         fi
+
     - name: Send slack update failure
       if: ${{ failure() }}
       continue-on-error: true
