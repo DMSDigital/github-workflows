@@ -29,14 +29,10 @@ on:
         description: "Tag the push to the registry with the latest tag"
         type: boolean
         default: true
-      additional_tags_enabled:
-        description: "Add additional tags besides the GITHUB SHA"
+      tag_development:
+        description: "Add tag for development branch"
         type: boolean
-        default: false
-      additional_tags:
-        description: "List of additional tags"
-        type: string
-        required: false
+        default: true
       service_account:
         description: 'GCP Service account to use with Workload identity federation'
         required: true
@@ -95,10 +91,9 @@ jobs:
           docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:latest
           docker push ${{ inputs.registry }}/${{ inputs.app_name}}:latest
         fi
-        if [ ${{inputs.additional_tags_enabled == "true" ]; then
-          for add_tag in ${{ inputs.additional_tags }}
-            docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:$add_tag
-            docker push ${{ inputs.registry }}/${{ inputs.app_name}}:$add_tag
+        if [ ${{inputs.tag_development == "true" ]; then
+          docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:development
+          docker push ${{ inputs.registry }}/${{ inputs.app_name}}:development
         fi
 
     - name: Send slack update failure
