@@ -29,6 +29,10 @@ on:
         description: "Tag the push to the registry with the latest tag"
         type: boolean
         default: true
+      tag_branch:
+        description: "Add tag for the ref branch"
+        type: boolean
+        default: true
       tag_development:
         description: "Add tag for development branch"
         type: boolean
