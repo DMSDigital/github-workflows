@@ -93,11 +93,15 @@ jobs:
         fi
 
     - name: Tag development
-      if: ${{inputs.tag_development}} == "true"
+      if: ${{inputs.tag_development}} == true
       run: |
         docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:development
         docker push ${{ inputs.registry }}/${{ inputs.app_name}}:development
-
+    - name: Tag branch
+      if: ${{ inputs.tag_branch }} == true
+      run: |
+        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
+        docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
     - name: Send slack update failure
       if: ${{ failure() }}
       continue-on-error: true
