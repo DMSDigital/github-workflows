@@ -89,7 +89,7 @@ jobs:
       run: |
         mvn -DskipTests clean install
         grep -Eo "<version>[0-9]+.[0-9]+.[0-9]+" pom.xml | grep -Eo "[0-9]+\\.[0-9]+\\.[0-9]+" | head -n 1 > next_version
-        docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
+        docker build -t ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} --build-arg JAR_FILE=target/${{ inputs.java_target_name}}-`cat next_version`.jar .
         docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	}} 
         if [ ${{inputs.tag_latest }} == "true" ]; then
           docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:latest
@@ -101,7 +101,7 @@ jobs:
       run: |
         if [ ${{github.ref_name}} == "master" ] || [ ${{ github.ref_name }} == "main" ] || [ ${{ github.ref_name }} == "development" ]; then
           docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
-          docker push ${{ inputs.registry }}/${{ inputs.app_name}}:development
+          docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
         fi
     
     - name: Send slack update failure
