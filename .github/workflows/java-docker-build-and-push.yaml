@@ -96,16 +96,12 @@ jobs:
           docker push ${{ inputs.registry }}/${{ inputs.app_name}}:latest
         fi
 
-    - name: Tag development
-      if: ${{inputs.tag_development}} == true
-      run: |
-        docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:development
-        docker push ${{ inputs.registry }}/${{ inputs.app_name}}:development
     - name: Tag branch
-      if: ${{ inputs.tag_branch }} == true
+      if: ${{ inputs.tag_branch == true && ( github.ref_name == "master" || github.ref_name == "main" || github.ref_name == "development"  ) }}
       run: |
         docker tag ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }} ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
-        docker push ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
+        docker push ${{ inputs.registry }}/${{ inputs.app_name}}:development
+    
     - name: Send slack update failure
       if: ${{ failure() }}
       continue-on-error: true
