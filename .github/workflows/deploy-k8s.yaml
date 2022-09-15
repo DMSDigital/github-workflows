@@ -90,6 +90,7 @@ jobs:
       if: ${{ failure() && steps.rollout.conclusion == 'failure' }}
       run: |
         kubectl -n ${{ inputs.namespace }} rollout undo deployment ${{ inputs.deployment_name }}
+        exit 1
 
     - name: Send slack update success
       if: ${{ success() }}
