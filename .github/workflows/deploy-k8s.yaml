@@ -85,6 +85,7 @@ jobs:
       id: rollout
       run: |
         timeout ${{ inputs.rollout_timeout }} kubectl rollout status deploy/${{ inputs.deployment_name }} -n ${{ inputs.namespace }}
+        kubectl logs -l app=${{ inputs.deployment_name }} --tail 250
 
     - name: Rollback
       if: ${{ failure() && steps.rollout.conclusion == 'failure' }}
