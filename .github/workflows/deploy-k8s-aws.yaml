@@ -58,6 +58,10 @@ jobs:
         role-to-assume: ${{ inputs.iam_role}}
         aws-region: ${{ inputs.region }}
     
+    - name: Get credentials for the EKS cluster
+      run: |
+        aws eks update-kubeconfig --name ${{ inputs.cluster }}
+
     # # Get the GKE credentials so we can deploy to the cluster
     # - name: Set up kubectl
     #   with:
