@@ -1,0 +1,93 @@
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'Application name used for building the image'
+        required: true
+        type: string
+      deployment_name:
+        description: 'Application name used for the k8s deployment'
+        required: true
+        type: string
+      namespace:
+        description: "Kubernetes namespace for the app deployment"
+        default: default
+        type: string
+      iam_role:
+        description: "AWS IAM role to use with OIDC to authenticate"
+        type: string
+        required: true
+      cluster:
+        description: "Kubernetes cluster name to deploy on"
+        type: string
+      region:
+        description: "Region of the EKS cluster"
+        type: string
+        required: false
+        default: "eu-west-2"
+      registry:
+        description: "Docker registry to of the image"
+        required: false
+        default: eu.gcr.io/dextcloud-203808
+        type: string
+      rollout_timeout:
+        description: "Time to wait for the pod rollout to finish"
+        required: false
+        default: 300
+        type: string
+    secrets:
+      slack_webhook:
+        required: false
+
+jobs:
+  deploy-k8s-aws:
+    name: Deploy to k8s
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials with OIDC
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ inputs.iam_role}}
+        aws-region: ${{ inputs.region }}
+    
+    # # Get the GKE credentials so we can deploy to the cluster
+    # - name: Set up kubectl
+    #   with:
+    #     cluster_name: ${{ inputs.cluster }}
+    #     location: ${{ inputs.location }}
+
+    - name: Deploy
+      run: |
+        kubectl -n ${{ inputs.namespace }} set image deployment/${{ inputs.deployment_name }} ${{ inputs.deployment_name }}=${{ inputs.registry }}/${{ inputs.app_name}}:$GITHUB_SHA
+
+    - name: Watch rollout
+      id: rollout
+      run: |
+        timeout ${{ inputs.rollout_timeout }} kubectl rollout status deploy/${{ inputs.deployment_name }} -n ${{ inputs.namespace }}
+
+    - name: Rollback
+      if: ${{ failure() && steps.rollout.conclusion == 'failure' }}
+      run: |
+        kubectl logs -l app=${{ inputs.deployment_name }} --tail 250
+        kubectl -n ${{ inputs.namespace }} rollout undo deployment ${{ inputs.deployment_name }}
+        exit 1
+
+    - name: Send slack update success
+      if: ${{ success() }}
+      continue-on-error: true
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has finished successfully. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\"}" ${{ secrets.slack_webhook }}
+
+    - name: Send slack update failure
+      if: ${{ failure() }}
+      continue-on-error: true
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"Deployment for ${{ inputs.app_name }} to ${{ inputs.cluster }} has failed. URL: ${{ github.repositoryUrl }}/runs/${{ github.github.run_id	}}\"}" ${{ secrets.slack_webhook }}
