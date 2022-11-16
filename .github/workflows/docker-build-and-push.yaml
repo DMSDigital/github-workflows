@@ -54,11 +54,12 @@ jobs:
 
     - name: Build and push image
       uses: docker/build-push-action@v2
+      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development'
       with:
         context: .
         file: ${{ inputs.dockerfile }}
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha	 }},${{ inputs.registry }}/${{ inputs.app_name}}:latest
+        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }},${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref }}
         build-args: ${{ inputs.build-args }}
 
     - name: Send slack update failure
