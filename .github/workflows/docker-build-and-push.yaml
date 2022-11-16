@@ -59,7 +59,7 @@ jobs:
         context: .
         file: ${{ inputs.dockerfile }}
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }},${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref }}
+        tags: ${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.sha }},${{ inputs.registry }}/${{ inputs.app_name}}:${{ github.ref_name }}
         build-args: ${{ inputs.build-args }}
 
     - name: Send slack update failure
