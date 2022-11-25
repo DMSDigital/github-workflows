@@ -29,7 +29,7 @@ on:
       registry:
         description: "Docker registry to of the image"
         required: false
-        default: eu.gcr.io/dextcloud-203808
+        default: 208047562239.dkr.ecr.eu-west-2.amazonaws.com
         type: string
       rollout_timeout:
         description: "Time to wait for the pod rollout to finish"

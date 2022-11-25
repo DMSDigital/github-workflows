@@ -57,7 +57,7 @@ jobs:
     - name: Setup
       uses: DMSDigital/github-workflows/.github/actions/init-setup-aws@master
       with:
-        iam_role: {{ inputs.iam_role }}
+        iam_role: ${{ inputs.iam_role }}
         self_hosted: true
 
     - name: Set up JDK 11
