@@ -21,6 +21,10 @@ on:
         description: "List of build time arguments to pass to docker build"
         required: false
         type: string
+      iam_role: 
+        description: "AWS IAM Role"
+        required: false
+        type: string
     secrets:
       slack_webhook:
         required: false
