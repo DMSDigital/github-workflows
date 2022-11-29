@@ -14,6 +14,11 @@ inputs:
     description: "Flag if the build is using a self-hosted runner"
     type: boolean
     required: false
+  public_registry:
+    description: "Flag if the registry is public"
+    type: boolean
+    required: false
+    default: false
 runs:
   using: 'composite'
   steps:
@@ -38,4 +43,13 @@ runs:
 
   - name: Login to Amazon ECR
     id: login-ecr
+    if: ${{ inputs.public_registry == false }}
     uses: aws-actions/amazon-ecr-login@v1
+
+  - name: Login to Amazon ECR public
+    id: login-ecr-public
+    if: ${{ inputs.public_registry == true }}
+    uses: aws-actions/amazon-ecr-login@v1
+    with:
+      registry-type: public
+
