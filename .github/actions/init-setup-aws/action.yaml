@@ -43,12 +43,12 @@ runs:
 
   - name: Login to Amazon ECR
     id: login-ecr
-    if: ${{ inputs.public_registry == false }}
+    if: "${{ inputs.public_registry == 'false' }}"
     uses: aws-actions/amazon-ecr-login@v1
 
   - name: Login to Amazon ECR public
     id: login-ecr-public
-    if: ${{ inputs.public_registry == true }}
+    if: "${{ inputs.public_registry == 'true' }}"
     uses: aws-actions/amazon-ecr-login@v1
     with:
       registry-type: public
