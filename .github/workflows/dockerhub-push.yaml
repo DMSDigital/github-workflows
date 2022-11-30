@@ -26,6 +26,12 @@ on:
         required: false
         default: 208047562239.dkr.ecr.eu-west-2.amazonaws.com
         type: string
+      public_registry:
+        description: "Flag if the registry is public"
+        type: boolean
+        required: false
+        default: false
+
       dockerhub_registry:
         description: "DockerHub registry to push the image"
         required: false
