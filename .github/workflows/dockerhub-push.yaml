@@ -24,24 +24,22 @@ on:
       registry:
         description: "Docker registry to pull the image"
         required: false
-        default: eu.gcr.io/dextcloud-203808
+        default: 208047562239.dkr.ecr.eu-west-2.amazonaws.com
         type: string
       dockerhub_registry:
         description: "DockerHub registry to push the image"
         required: false
         default: docker.io/dextcloudonprem
         type: string
-      service_account:
-        description: 'GCP Service account to use with Workload identity federation'
+      iam_role:
+        description: 'AWS IAM Role to authenticate with'
         required: true
         type: string
-      project_id:
-        description: "GCP project ID"
+      region:
+        description: "AWS region"
         type: string
-      workload_identity_provider:
-        description: "GCP Workload identity provider for Github actions"
-        required: true
-        type: string
+        required: false
+        default: eu-west-2
 
     secrets:
       dockerhub_username:
@@ -59,11 +57,11 @@ jobs:
 
     steps:
     - name: Setup
-      uses: DMSDigital/github-workflows/.github/actions/init-setup@master
+      uses: DMSDigital/github-workflows/.github/actions/init-setup-aws@master
       with:
-        project_id: ${{ inputs.project_id }}
-        workload_identity_provider: ${{ inputs.workload_identity_provider }}
-        service_account: ${{ inputs.service_account }}
+        iam_role: ${{ inputs.iam_role }}
+        region: ${{ inputs.region }}
+        public_registry: ${{ inputs.public_registry }}
 
     - name: Pull, tag and push
       run: |
