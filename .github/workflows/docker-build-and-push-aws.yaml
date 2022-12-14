@@ -44,7 +44,7 @@ jobs:
         iam_role: ${{ inputs.iam_role}}
 
     - name: Build and push image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development'
       with:
         context: .
