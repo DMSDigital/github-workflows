@@ -39,7 +39,7 @@ jobs:
     - name: Setup Maven
       uses: s4u/setup-maven-action@v1.6.0
       with:
-        java-version: 11
+        java-version: 17
         maven-version: 3.6.3
 
     - name: Export spring profile
