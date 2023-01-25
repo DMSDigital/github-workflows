@@ -1,7 +1,7 @@
 name: Build and push to Dockerhub
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       app_name:
         description: 'Application name to be used for building the image'
