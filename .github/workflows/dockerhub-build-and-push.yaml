@@ -21,6 +21,11 @@ on:
 
 jobs:
   build:
+    name: Build and push a docker image
+    runs-on: [self-hosted]
+    permissions:
+      id-token: write
+      contents: write
     steps:
     - name: Check out code
       uses: actions/checkout@v2
