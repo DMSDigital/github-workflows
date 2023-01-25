@@ -7,6 +7,10 @@ on:
         description: 'Application name to be used for building the image'
         required: true
         type: string
+      java_target_name:
+        description: 'Java target app name'
+        required: true
+        type: string
       dockerhub_registry:
         description: "DockerHub registry to push the image"
         required: false
