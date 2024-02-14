@@ -58,8 +58,6 @@ jobs:
         TESTCONTAINERS_RYUK_DISABLED: "true"
       run: |
         echo "${SPRING_APPLICATION_JSON}"
-        echo "${VAULT_TOKEN}" > token.tmp
-        sleep 600
         mvn -B clean test
 
     - name: Send slack update failure
